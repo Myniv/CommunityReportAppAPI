@@ -13,40 +13,49 @@ namespace CommunityReportAppAPI.Controllers
             _communityPostService = communityPostService;
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Get(string? userId) {
-            var posts = _communityPostService.GetAllPosts(userId);
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] string? userId, [FromQuery] string? status, [FromQuery] string? category, [FromQuery] bool? isReport, [FromQuery] string? urgency)
+        {
+            var posts = await _communityPostService.GetAllPosts(userId, status, category, isReport, urgency);
             return Ok(posts);
         }
 
+
         [HttpGet("post/{id}")]
-        public IActionResult GetById(int id) {
-            var post = _communityPostService.GetPostById(id);
+        public async Task<IActionResult> GetById(int id)
+        {
+            var post = await _communityPostService.GetPostById(id);
             return Ok(post);
         }
 
         [HttpPost]
-        public IActionResult Post(Domain.Models.CommunityPost post) {
-            var createdPost = _communityPostService.CreatePost(post);
+        public async Task<IActionResult> Post(Domain.Models.CommunityPostDTO post)
+        {
+            var createdPost = await _communityPostService.CreatePost(post);
             return Ok(createdPost);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(Domain.Models.CommunityPost post, int id) {
-            var updated = _communityPostService.UpdatePost(post, id);
-            if (!updated.Result) {
+        public async Task<IActionResult> Put(Domain.Models.CommunityPostDTO post, int id)
+        {
+            var updated = await _communityPostService.UpdatePost(post, id);
+            if (!updated)
+            {
                 return NotFound();
             }
             return Ok(updated);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id) {
-            var deleted = _communityPostService.DeletePost(id);
-            if (!deleted.Result) {
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _communityPostService.DeletePost(id);
+            if (!deleted)
+            {
                 return NotFound();
             }
             return Ok(deleted);
         }
+
     }
 }

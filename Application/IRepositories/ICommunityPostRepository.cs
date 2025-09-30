@@ -9,10 +9,10 @@ namespace Application.IRepositories
 {
     public interface ICommunityPostRepository : IRepository<CommunityPost>
     {
-        //Task<CommunityPost> GetPostById(int id);
-        //Task<CommunityPost> GetAllPost(int? id);
-        //Task<CommunityPost> CreatePost(CommunityPost post);
-        //Task<bool> UpdatePost(CommunityPost post, int id);
-        //Task<bool> DeletePost(int id);
+        Task<CommunityPost> GetPostById(int id);
+        Task<IQueryable<CommunityPost>> GetAllPost();
+        Task<CommunityPost> CreatePost(CommunityPost post);
+        Task<bool> UpdatePost(CommunityPost post, int id);
+        Task<bool> DeletePost(int id);
     }
 }

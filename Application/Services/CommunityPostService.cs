@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Domain.Models;
 using CommunityReportAppAPI.Application.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,28 +18,66 @@ namespace Application.Services
         {
             _communityPostRepository = communityPostRepository;
         }
-        public async Task<IEnumerable<CommunityPost>> GetAllPosts(string? userId)
+
+        public async Task<IEnumerable<CommunityPost>> GetAllPosts(
+    string? userId,
+    string? status = null,
+    string? category = null,
+    bool? isReport = null,
+    string? urgency = null)
         {
-            if (userId != null)
-            {
-                return await _communityPostRepository.GetAllAsync(cp => cp.UserId == userId);
-            }
-            return await _communityPostRepository.GetAllAsync();
+            var query = await _communityPostRepository.GetAllPost();
+
+            if (!string.IsNullOrEmpty(userId))
+                query = query.Where(cp => cp.UserId == userId);
+
+            if (!string.IsNullOrEmpty(status))
+                query = query.Where(cp => cp.Status == status);
+
+            if (!string.IsNullOrEmpty(category))
+                query = query.Where(cp => cp.Category == category);
+
+            if (isReport.HasValue)
+                query = query.Where(cp => cp.IsReport == isReport.Value);
+
+            if (!string.IsNullOrEmpty(urgency))
+                query = query.Where(cp => cp.Urgency == urgency);
+
+            return await query.ToListAsync();
         }
+
 
         public async Task<CommunityPost> GetPostById(int id)
         {
-            return await _communityPostRepository.GetFirstOrDefaultAsync(cp =>cp.PostId == id);
+            return await _communityPostRepository.GetFirstOrDefaultAsync(cp => cp.PostId == id);
         }
 
-        public async Task<CommunityPost> CreatePost(CommunityPost post)
+        public async Task<CommunityPostDTO> CreatePost(CommunityPostDTO post)
         {
-            await _communityPostRepository.AddAsync(post);
+            var communityPost = new CommunityPost
+            {
+                UserId = post.UserId,
+                Title = post.Title,
+                Description = post.Description,
+                Photo = post.Photo,
+                Longitude = post.Longitude,
+                Latitude = post.Latitude,
+                Address = post.Address,
+                Status = post.Status,
+                Category = post.Category,
+                IsReport = post.IsReport,
+                Urgency = post.Urgency,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                DeletedAt = null
+            };
+
+            await _communityPostRepository.AddAsync(communityPost);
             await _communityPostRepository.SaveAsync();
             return post;
         }
 
-        public async Task<bool> UpdatePost(CommunityPost post, int id)
+        public async Task<bool> UpdatePost(CommunityPostDTO post, int id)
         {
             var existingPost = await _communityPostRepository.GetFirstOrDefaultAsync(cp => cp.PostId == id);
             if (existingPost == null)
@@ -55,10 +94,10 @@ namespace Application.Services
             existingPost.Status = post.Status;
             existingPost.Category = post.Category;
             existingPost.UpdatedAt = DateTime.UtcNow;
+            existingPost.Urgency = post.Urgency;
 
-            _communityPostRepository.Remove(existingPost);
-            await _communityPostRepository.AddAsync(existingPost);
-            await _communityPostRepository.SaveAsync();
+
+            await _communityPostRepository.UpdatePost(existingPost, id);
             return true;
         }
 
@@ -72,9 +111,7 @@ namespace Application.Services
 
             existingPost.DeletedAt = DateTime.UtcNow;
 
-            _communityPostRepository.Remove(existingPost);
-            await _communityPostRepository.AddAsync(existingPost);
-            await _communityPostRepository.SaveAsync();
+            await _communityPostRepository.DeletePost(id);
             return true;
         }
     }
