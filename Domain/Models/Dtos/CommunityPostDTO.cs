@@ -15,7 +15,7 @@ namespace Domain.Models
         public string Photo { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
-        public string Address { get; set; }
+        public string Location { get; set; }
         public string? Status { get; set; }
         public string Category { get; set; } 
         public bool IsReport { get; set; }

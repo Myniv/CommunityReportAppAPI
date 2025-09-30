@@ -14,9 +14,9 @@ namespace CommunityReportAppAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] string? userId, [FromQuery] string? status, [FromQuery] string? category, [FromQuery] bool? isReport, [FromQuery] string? urgency)
+        public async Task<IActionResult> Get([FromQuery] string? userId, [FromQuery] string? status, [FromQuery] string? category, [FromQuery] string? location, [FromQuery] bool? isReport, [FromQuery] string? urgency)
         {
-            var posts = await _communityPostService.GetAllPosts(userId, status, category, isReport, urgency);
+            var posts = await _communityPostService.GetAllPosts(userId, status, category, location, isReport, urgency);
             return Ok(posts);
         }
 

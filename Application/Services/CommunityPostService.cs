@@ -23,6 +23,7 @@ namespace Application.Services
     string? userId,
     string? status = null,
     string? category = null,
+    string? location = null,
     bool? isReport = null,
     string? urgency = null)
         {
@@ -43,6 +44,9 @@ namespace Application.Services
             if (!string.IsNullOrEmpty(urgency))
                 query = query.Where(cp => cp.Urgency == urgency);
 
+            if (!string.IsNullOrEmpty(location))
+                query = query.Where(cp => cp.Location == location);
+
             return await query.ToListAsync();
         }
 
@@ -62,7 +66,7 @@ namespace Application.Services
                 Photo = post.Photo,
                 Longitude = post.Longitude,
                 Latitude = post.Latitude,
-                Address = post.Address,
+                Location = post.Location,
                 Status = post.Status,
                 Category = post.Category,
                 IsReport = post.IsReport,
@@ -90,7 +94,7 @@ namespace Application.Services
             existingPost.Photo = post.Photo;
             existingPost.Longitude = post.Longitude;
             existingPost.Latitude = post.Latitude;
-            existingPost.Address = post.Address;
+            existingPost.Location = post.Location;
             existingPost.Status = post.Status;
             existingPost.Category = post.Category;
             existingPost.UpdatedAt = DateTime.UtcNow;

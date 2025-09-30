@@ -11,14 +11,27 @@ namespace Domain.Models
     public class Discussion
     {
         [Key]
+        [Column("id")]
         public int DiscussionId { get; set; }
+
         [ForeignKey("CommunityPost")]
+        [Column("post_id")]
         public int PostId { get; set; }
+
+        [Column("user_id")]
         public string UserId { get; set; }
+
+        [Column("message")]
         public string Message { get; set; }
+
+        [Column("created_at")]
         public DateTime CreatedAt { get; set; }
+
+        [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
-        public DateTime DeletedAt { get; set; }
+
+        [Column("deleted_at")]
+        public DateTime? DeletedAt { get; set; }
 
     }
 }
