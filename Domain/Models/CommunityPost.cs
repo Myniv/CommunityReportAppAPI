@@ -18,18 +18,13 @@ namespace Domain.Models
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public string Address { get; set; }
-        public string? Status { get; set; }
+        public string? Status { get; set; } //Pending, In Progress, Resolved
         public string Category { get; set; }
         public bool IsReport { get; set; }
-        public enum Urgency
-        {
-            Low,
-            Medium,
-            High
-        }
+        public string Urgency { get; set; } //Low, Medium, High
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public DateTime DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
         public ICollection<Discussion> Discussions { get; set; }
         //public ICollection<Like> Likes { get; set; }
     }
