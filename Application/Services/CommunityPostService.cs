@@ -56,7 +56,7 @@ namespace Application.Services
             return await _communityPostRepository.GetFirstOrDefaultAsync(cp => cp.PostId == id);
         }
 
-        public async Task<CommunityPostDTO> CreatePost(CommunityPostDTO post)
+        public async Task<CommunityPostResponseDTO> CreatePost(CommunityPostDTO post)
         {
             var communityPost = new CommunityPost
             {
@@ -78,7 +78,21 @@ namespace Application.Services
 
             await _communityPostRepository.AddAsync(communityPost);
             await _communityPostRepository.SaveAsync();
-            return post;
+            return new CommunityPostResponseDTO
+            {
+                Id = communityPost.PostId,
+                UserId = communityPost.UserId,
+                Title = communityPost.Title,
+                Description = communityPost.Description,
+                Photo = communityPost.Photo,
+                Longitude = communityPost.Longitude,
+                Latitude = communityPost.Latitude,
+                Location = communityPost.Location,
+                Status = communityPost.Status,
+                Category = communityPost.Category,
+                IsReport = communityPost.IsReport,
+                Urgency = communityPost.Urgency
+            };
         }
 
         public async Task<bool> UpdatePost(CommunityPostDTO post, int id)

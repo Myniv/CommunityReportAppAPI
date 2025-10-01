@@ -24,7 +24,7 @@ namespace Domain.Models
         public string Description { get; set; }
 
         [Column("photo")]
-        public string Photo { get; set; }
+        public string? Photo { get; set; }
 
         [Column("longitude")]
         public double Longitude { get; set; }
