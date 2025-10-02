@@ -23,5 +23,9 @@ namespace Domain.Models
         public string Category { get; set; }
         public bool IsReport { get; set; }
         public string Urgency { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public List<Discussion>? Discussions { get; set; }
     }
 }

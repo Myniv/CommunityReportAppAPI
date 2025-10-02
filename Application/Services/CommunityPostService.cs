@@ -28,7 +28,7 @@ namespace Application.Services
     string? urgency = null)
         {
             var query = _communityPostRepository.GetAllPost()
-                .Result 
+                .Result
                 .Include(cp => cp.User)
                 .AsQueryable();
 
@@ -68,7 +68,10 @@ namespace Application.Services
                     Status = cp.Status,
                     Category = cp.Category,
                     IsReport = cp.IsReport,
-                    Urgency = cp.Urgency
+                    Urgency = cp.Urgency,
+                    CreatedAt = cp.CreatedAt,
+                    UpdatedAt = cp.UpdatedAt,
+                    DeletedAt = cp.DeletedAt
                 })
                 .ToListAsync();
         }
@@ -101,7 +104,10 @@ namespace Application.Services
                 Status = cp.Status,
                 Category = cp.Category,
                 IsReport = cp.IsReport,
-                Urgency = cp.Urgency
+                Urgency = cp.Urgency,
+                CreatedAt = cp.CreatedAt,
+                UpdatedAt = cp.UpdatedAt,
+                DeletedAt = cp.DeletedAt
             };
         }
 
@@ -142,7 +148,10 @@ namespace Application.Services
                 Status = communityPost.Status,
                 Category = communityPost.Category,
                 IsReport = communityPost.IsReport,
-                Urgency = communityPost.Urgency
+                Urgency = communityPost.Urgency,
+                CreatedAt = communityPost.CreatedAt,
+                UpdatedAt = communityPost.UpdatedAt,
+                DeletedAt = communityPost.DeletedAt
             };
         }
 
@@ -162,6 +171,7 @@ namespace Application.Services
             existingPost.Location = post.Location;
             existingPost.Status = post.Status;
             existingPost.Category = post.Category;
+            existingPost.IsReport = post.IsReport;
             existingPost.UpdatedAt = DateTime.UtcNow;
             existingPost.Urgency = post.Urgency;
 

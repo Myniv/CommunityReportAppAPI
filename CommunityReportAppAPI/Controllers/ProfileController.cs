@@ -1,4 +1,5 @@
 using CommunityReportAppAPI.Application.IServices;
+using Domain.Models.Dtos.Request;
 using Domain.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,13 +28,13 @@ public class ProfileController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateProfile([FromBody] Profile profile)
+    public async Task<IActionResult> CreateProfile([FromBody] ProfileRequestDTO profile)
     {
         return Ok(await _profileService.CreateProfile(profile));
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProfile(string id, [FromBody] Profile profile)
+    public async Task<IActionResult> UpdateProfile(string id, [FromBody] ProfileRequestDTO profile)
     {
         return Ok(await _profileService.UpdateProfile(profile, id));
     }

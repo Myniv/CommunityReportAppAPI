@@ -12,7 +12,7 @@ public class Profile
     [Column("username")]
     public string? Username { get; set; }
 
-    [Column("first_name")]
+    [Column("front_name")]
     public string? FirstName { get; set; }
 
     [Column("last_name")]

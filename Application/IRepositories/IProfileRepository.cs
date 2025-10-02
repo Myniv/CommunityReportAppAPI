@@ -1,3 +1,4 @@
+using Domain.Models.Dtos.Request;
 using Domain.Models.Entities;
 
 namespace Application.IRepositories;
