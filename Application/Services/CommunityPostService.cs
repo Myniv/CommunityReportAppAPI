@@ -19,7 +19,7 @@ namespace Application.Services
             _communityPostRepository = communityPostRepository;
         }
 
-        public async Task<IEnumerable<CommunityPost>> GetAllPosts(
+        public async Task<IEnumerable<CommunityPostResponseDTO>> GetAllPosts(
     string? userId,
     string? status = null,
     string? category = null,
@@ -27,7 +27,10 @@ namespace Application.Services
     bool? isReport = null,
     string? urgency = null)
         {
-            var query = await _communityPostRepository.GetAllPost();
+            var query = _communityPostRepository.GetAllPost()
+                .Result 
+                .Include(cp => cp.User)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(userId))
                 query = query.Where(cp => cp.UserId == userId);
@@ -47,16 +50,64 @@ namespace Application.Services
             if (!string.IsNullOrEmpty(location))
                 query = query.Where(cp => cp.Location == location);
 
-            return await query.ToListAsync();
+            query = query.OrderByDescending(cp => cp.CreatedAt);
+
+            return await query
+                .Select(cp => new CommunityPostResponseDTO
+                {
+                    Id = cp.PostId,
+                    UserId = cp.UserId,
+                    UserName = cp.User != null ? cp.User.Username : null,
+                    UserPhoto = cp.User != null ? cp.User.Photo : null,
+                    Title = cp.Title,
+                    Description = cp.Description,
+                    Photo = cp.Photo,
+                    Longitude = cp.Longitude,
+                    Latitude = cp.Latitude,
+                    Location = cp.Location,
+                    Status = cp.Status,
+                    Category = cp.Category,
+                    IsReport = cp.IsReport,
+                    Urgency = cp.Urgency
+                })
+                .ToListAsync();
         }
 
 
-        public async Task<CommunityPost> GetPostById(int id)
+
+
+        public async Task<CommunityPostResponseDTO?> GetPostById(int id)
         {
-            return await _communityPostRepository.GetFirstOrDefaultAsync(cp => cp.PostId == id);
+            var queryable = await _communityPostRepository.GetAllPost();
+
+            var cp = await queryable
+                        .Include(p => p.User)
+                        .FirstOrDefaultAsync(p => p.PostId == id);
+
+            if (cp == null) return null;
+
+            return new CommunityPostResponseDTO
+            {
+                Id = cp.PostId,
+                UserId = cp.UserId,
+                UserName = cp.User?.Username,
+                UserPhoto = cp.User?.Photo,
+                Title = cp.Title,
+                Description = cp.Description,
+                Photo = cp.Photo,
+                Longitude = cp.Longitude,
+                Latitude = cp.Latitude,
+                Location = cp.Location,
+                Status = cp.Status,
+                Category = cp.Category,
+                IsReport = cp.IsReport,
+                Urgency = cp.Urgency
+            };
         }
 
-        public async Task<CommunityPostResponseDTO> CreatePost(CommunityPostDTO post)
+
+
+        public async Task<CommunityPostResponseDTO> CreatePost(CommunityPostRequestDTO post)
         {
             var communityPost = new CommunityPost
             {
@@ -95,7 +146,7 @@ namespace Application.Services
             };
         }
 
-        public async Task<bool> UpdatePost(CommunityPostDTO post, int id)
+        public async Task<bool> UpdatePost(CommunityPostRequestDTO post, int id)
         {
             var existingPost = await _communityPostRepository.GetFirstOrDefaultAsync(cp => cp.PostId == id);
             if (existingPost == null)

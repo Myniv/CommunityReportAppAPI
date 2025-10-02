@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class CommunityPostDTO
+    public class CommunityPostRequestDTO
     {
         public string UserId { get; set; }
         public string Title { get; set; }
