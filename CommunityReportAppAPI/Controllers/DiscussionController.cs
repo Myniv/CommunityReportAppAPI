@@ -16,42 +16,42 @@ namespace CommunityReportAppAPI.Controllers
         }
 
         [HttpGet("{postId}")]
-        public IActionResult Get(int? postId)
+        public async Task<IActionResult> Get(int? postId)
         {
-            var discussions = _discussionService.GetAllDiscussions(postId);
+            var discussions = await _discussionService.GetAllDiscussions(postId);
             return Ok(discussions);
         }
 
         [HttpGet("discussion/{id}")]
-        public IActionResult GetById(int id)
+        public async Task <IActionResult> GetById(int id)
         {
-            var discussion = _discussionService.GetDiscussionById(id);
+            var discussion = await _discussionService.GetDiscussionById(id);
             return Ok(discussion);
         }
             
         [HttpPost]
 
-        public IActionResult Post(Domain.Models.Discussion discussion)
+        public async Task<IActionResult> Post(Domain.Models.Discussion discussion)
         {
-            var createdDiscussion = _discussionService.CreateDiscussion(discussion);
+            var createdDiscussion = await _discussionService.CreateDiscussion(discussion);
             return Ok(createdDiscussion);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(Domain.Models.Discussion discussion, int id)
+        public async Task<IActionResult> Put(Domain.Models.Discussion discussion, int id)
         {
-            var updated = _discussionService.UpdateDiscussion(discussion, id);
-            if (!updated.Result)
+            var updated = await _discussionService.UpdateDiscussion(discussion, id);
+            if (!updated)
             {
                 return NotFound();
             }
             return Ok(updated);
         }
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var deleted = _discussionService.DeleteDiscussion(id);
-            if (!deleted.Result)
+            var deleted = await _discussionService.DeleteDiscussion(id);
+            if (!deleted)
             {
                 return NotFound();
             }
