@@ -17,6 +17,7 @@ namespace Infrastructure
             services.AddDbContext<MyDbContext>(options => options.UseNpgsql(connection));
             services.AddScoped<IDiscussionRepository, DiscussionRepository>();
             services.AddScoped<ICommunityPostRepository, CommunityPostRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
         }
     }
 }

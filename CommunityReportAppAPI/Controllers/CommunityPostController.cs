@@ -29,14 +29,14 @@ namespace CommunityReportAppAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Domain.Models.CommunityPostDTO post)
+        public async Task<IActionResult> Post(Domain.Models.CommunityPostRequestDTO post)
         {
             var createdPost = await _communityPostService.CreatePost(post);
             return Ok(createdPost);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Domain.Models.CommunityPostDTO post, int id)
+        public async Task<IActionResult> Put(Domain.Models.CommunityPostRequestDTO post, int id)
         {
             var updated = await _communityPostService.UpdatePost(post, id);
             if (!updated)

@@ -14,6 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigurePersistence(builder.Configuration);
 builder.Services.AddScoped<ICommunityPostService, CommunityPostService>();
 builder.Services.AddScoped<IDiscussionService, DiscussionService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+
 
 var app = builder.Build();
 

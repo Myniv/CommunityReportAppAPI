@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class CommunityPostResponseDTO
+    public class CommunityPostRequestDTO
     {
-        public int Id { get; set; }
         public string UserId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -18,8 +17,8 @@ namespace Domain.Models
         public double Latitude { get; set; }
         public string Location { get; set; }
         public string? Status { get; set; }
-        public string Category { get; set; }
+        public string Category { get; set; } 
         public bool IsReport { get; set; }
-        public string Urgency { get; set; }
+        public string Urgency { get; set; } //Low, Medium, High
     }
 }
