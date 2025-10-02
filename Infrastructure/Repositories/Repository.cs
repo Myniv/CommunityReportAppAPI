@@ -116,5 +116,12 @@ namespace Infrastructure.Repositories
         {
             return await _db.SaveChangesAsync();
         }
+
+        public async Task<bool> UpdateAsync(T entity)
+        {
+            _dbSet.Update(entity);
+            await _db.SaveChangesAsync();
+            return true;
+        }
     }
 }

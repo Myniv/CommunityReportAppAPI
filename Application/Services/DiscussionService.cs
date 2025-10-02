@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Application.IServices;
 using Domain.Models;
+using Domain.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,14 +33,25 @@ namespace Application.Services
             return await _discussionRepository.GetFirstOrDefaultAsync(d => d.DiscussionId == id);
         }
 
-        public async Task<Discussion> CreateDiscussion(Discussion discussion)
+        public async Task<Discussion> CreateDiscussion(DiscussionDTO discussion)
         {
-            await _discussionRepository.AddAsync(discussion);
+
+            var newDiscussion = new Discussion
+            {
+                PostId = discussion.PostId,
+                UserId = discussion.UserId,
+                Message = discussion.Message,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                DeletedAt = null,
+            };
+
+            await _discussionRepository.AddAsync(newDiscussion);
             await _discussionRepository.SaveAsync();
-            return discussion;
+            return newDiscussion;
         }
 
-        public async Task<bool> UpdateDiscussion(Discussion discussion, int id)
+        public async Task<bool> UpdateDiscussion(DiscussionDTO discussion, int id)
         {
             var existingDiscussion = await _discussionRepository.GetFirstOrDefaultAsync(d => d.DiscussionId == id);
             if (existingDiscussion == null)
@@ -50,9 +62,7 @@ namespace Application.Services
             existingDiscussion.Message = discussion.Message;
             existingDiscussion.UpdatedAt = DateTime.UtcNow;
 
-            _discussionRepository.Remove(existingDiscussion);
-            await _discussionRepository.AddAsync(existingDiscussion);
-            await _discussionRepository.SaveAsync();
+            await _discussionRepository.UpdateAsync(existingDiscussion);
             return true;
         }
 

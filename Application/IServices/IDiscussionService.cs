@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace Application.IServices
     {
         Task<Discussion> GetDiscussionById(int id);
         Task<IEnumerable<Discussion>> GetAllDiscussions(int? postId);
-        Task<Discussion> CreateDiscussion(Discussion discussion);
-        Task<bool> UpdateDiscussion(Discussion discussion, int id);
+        Task<Discussion> CreateDiscussion(DiscussionDTO discussion);
+        Task<bool> UpdateDiscussion(DiscussionDTO discussion, int id);
         Task<bool> DeleteDiscussion(int id);
     }
 }

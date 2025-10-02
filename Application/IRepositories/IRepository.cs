@@ -21,5 +21,6 @@ namespace Application.IRepositories
         bool Remove(T entity);
         bool RemoveRange(IEnumerable<T> entities);
         Task<int> SaveAsync();
+        Task<bool> UpdateAsync(T entity);
     }
 }

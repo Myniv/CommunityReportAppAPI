@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using CommunityReportAppAPI.Application.IServices;
+using Domain.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommunityReportAppAPI.Controllers
@@ -31,14 +32,14 @@ namespace CommunityReportAppAPI.Controllers
             
         [HttpPost]
 
-        public async Task<IActionResult> Post(Domain.Models.Discussion discussion)
+        public async Task<IActionResult> Post(DiscussionDTO discussion)
         {
             var createdDiscussion = await _discussionService.CreateDiscussion(discussion);
             return Ok(createdDiscussion);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Domain.Models.Discussion discussion, int id)
+        public async Task<IActionResult> Put(DiscussionDTO discussion, int id)
         {
             var updated = await _discussionService.UpdateDiscussion(discussion, id);
             if (!updated)
