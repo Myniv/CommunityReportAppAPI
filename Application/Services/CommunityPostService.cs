@@ -57,7 +57,7 @@ namespace Application.Services
                 {
                     Id = cp.PostId,
                     UserId = cp.UserId,
-                    UserName = cp.User != null ? cp.User.Username : null,
+                    Username = cp.User != null ? cp.User.Username : null,
                     UserPhoto = cp.User != null ? cp.User.Photo : null,
                     Title = cp.Title,
                     Description = cp.Description,
@@ -93,7 +93,7 @@ namespace Application.Services
             {
                 Id = cp.PostId,
                 UserId = cp.UserId,
-                UserName = cp.User?.Username,
+                Username = cp.User?.Username,
                 UserPhoto = cp.User?.Photo,
                 Title = cp.Title,
                 Description = cp.Description,
