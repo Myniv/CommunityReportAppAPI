@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Models.Entities;
 
 namespace Domain.Models
 {
@@ -16,6 +17,8 @@ namespace Domain.Models
 
         [Column("user_id")]
         public string UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public Profile User { get; set; }
 
         [Column("title")]
         public string Title { get; set; }

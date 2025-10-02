@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,13 @@ namespace Infrastructure.Context
 {
     public class MyDbContext : DbContext
     {
-        
+
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
 
         }
         public DbSet<Discussion> Discussions { get; set; }
         public DbSet<CommunityPost> CommunityPosts { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
     }
 }
