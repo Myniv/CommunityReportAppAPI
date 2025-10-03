@@ -1,3 +1,4 @@
+using Domain.Models.Dtos.Respons;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,6 +27,6 @@ namespace Domain.Models
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
-        public List<Discussion>? Discussions { get; set; }
+        public List<DiscussionResponseDTO>? Discussions { get; set; }
     }
 }

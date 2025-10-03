@@ -22,7 +22,7 @@ namespace Application.Services
         {
             if (postId != null)
             {
-                return await _discussionRepository.GetAllAsync(d => d.PostId == postId);
+                return await _discussionRepository.GetAllAsync(d => d.CommunityPostId == postId);
             }
             return await _discussionRepository.GetAllAsync();
             
@@ -38,7 +38,7 @@ namespace Application.Services
 
             var newDiscussion = new Discussion
             {
-                PostId = discussion.PostId,
+                CommunityPostId = discussion.CommunityPostId,
                 UserId = discussion.UserId,
                 Message = discussion.Message,
                 CreatedAt = DateTime.UtcNow,

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,10 +14,8 @@ namespace Domain.Models
         [Key]
         [Column("id")]
         public int DiscussionId { get; set; }
-
-        [ForeignKey("CommunityPost")]
         [Column("post_id")]
-        public int PostId { get; set; }
+        public int CommunityPostId { get; set; }
 
         [Column("user_id")]
         public string UserId { get; set; }
@@ -32,6 +31,8 @@ namespace Domain.Models
 
         [Column("deleted_at")]
         public DateTime? DeletedAt { get; set; }
-
+        public virtual Profile? User { get; set; }
+        [ForeignKey(nameof(CommunityPostId))]
+        public virtual CommunityPost? CommunityPost { get; set; }
     }
 }

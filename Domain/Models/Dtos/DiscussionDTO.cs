@@ -9,7 +9,7 @@ namespace Domain.Models.Dtos
     public class DiscussionDTO
     {
         public string UserId { get; set; }
-        public int PostId { get; set; }
+        public int CommunityPostId { get; set; }
         public string Message { get; set; }
     }
 }

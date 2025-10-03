@@ -8,6 +8,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Models.Dtos;
+using Domain.Models.Dtos.Respons;
 
 namespace Application.Services
 {
@@ -85,6 +87,8 @@ namespace Application.Services
 
             var cp = await queryable
                         .Include(p => p.User)
+                        .Include(p => p.Discussions)
+                            .ThenInclude(d => d.User)
                         .FirstOrDefaultAsync(p => p.PostId == id);
 
             if (cp == null) return null;
@@ -105,6 +109,16 @@ namespace Application.Services
                 Category = cp.Category,
                 IsReport = cp.IsReport,
                 Urgency = cp.Urgency,
+                Discussions = cp.Discussions.Select(d => new DiscussionResponseDTO
+                {
+                    DiscussionId = d.DiscussionId,
+                    CommunityPostId = d.CommunityPostId,
+                    UserId = d.UserId,
+                    Message = d.Message,
+                    UpdatedAt = d.UpdatedAt,
+                    CreatedAt = d.CreatedAt,
+                    User = new ProfileDiscussionResponseDTO { Username = d.User.Username, Photo = d.User.Photo }
+                }).ToList(),
                 CreatedAt = cp.CreatedAt,
                 UpdatedAt = cp.UpdatedAt,
                 DeletedAt = cp.DeletedAt
