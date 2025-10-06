@@ -15,6 +15,7 @@ builder.Services.ConfigurePersistence(builder.Configuration);
 builder.Services.AddScoped<ICommunityPostService, CommunityPostService>();
 builder.Services.AddScoped<IDiscussionService, DiscussionService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<ICommunityPostUpdateService, CommunityPostUpdateService>();
 
 
 var app = builder.Build();

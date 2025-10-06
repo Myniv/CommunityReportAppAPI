@@ -87,6 +87,8 @@ namespace Application.Services
 
             var cp = await queryable
                         .Include(p => p.User)
+                        .Include(p=> p.CommunityPostUpdates)
+                            .ThenInclude(cu => cu.User)
                         .Include(p => p.Discussions)
                             .ThenInclude(d => d.User)
                         .FirstOrDefaultAsync(p => p.PostId == id);
@@ -117,7 +119,20 @@ namespace Application.Services
                     Message = d.Message,
                     UpdatedAt = d.UpdatedAt,
                     CreatedAt = d.CreatedAt,
-                    User = new ProfileDiscussionResponseDTO { Username = d.User.Username, Photo = d.User.Photo }
+                    User = new ProfileDiscussionResponseDTO { Username = d.User!.Username, Photo = d.User.Photo }
+                }).ToList(),
+                CommunityPostUpdates = cp.CommunityPostUpdates.Select(cu => new CommunityPostUpdateResponseDTO
+                {
+                    Id = cu.CommunityPostProgressId,
+                    UserId = cu.UserId,
+                    PostId = cu.CommunityPostId,
+                    Title = cu.Title,
+                    Description = cu.Description,
+                    Photo = cu.Photo,
+                    IsResolved = cu.IsResolved,
+                    CreatedAt = cu.CreatedAt,
+                    UpdatedAt = cu.UpdatedAt,
+                    User = new ProfileDiscussionResponseDTO { Username = cu.User!.Username, Photo = cu.User.Photo }
                 }).ToList(),
                 CreatedAt = cp.CreatedAt,
                 UpdatedAt = cp.UpdatedAt,

@@ -1,10 +1,4 @@
 using Domain.Models.Dtos.Respons;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Models
 {
@@ -28,5 +22,6 @@ namespace Domain.Models
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public List<DiscussionResponseDTO>? Discussions { get; set; }
+        public List<CommunityPostUpdateResponseDTO>? CommunityPostUpdates { get; set; }
     }
 }
