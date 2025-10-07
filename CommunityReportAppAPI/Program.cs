@@ -1,6 +1,8 @@
 using Application.IServices;
 using Application.Services;
 using CommunityReportAppAPI.Application.IServices;
+using CommunityReportAppAPI.Application.Services;
+using CompanyWeb.Domain.Models.Mail;
 using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +17,10 @@ builder.Services.ConfigurePersistence(builder.Configuration);
 builder.Services.AddScoped<ICommunityPostService, CommunityPostService>();
 builder.Services.AddScoped<IDiscussionService, DiscussionService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
+var mailSettings = builder.Configuration.GetSection("MailSettings").Get<MailSettings>();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 var app = builder.Build();
 

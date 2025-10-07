@@ -2,6 +2,7 @@ using Application.IRepositories;
 using Domain.Models.Dtos.Request;
 using Domain.Models.Entities;
 using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -21,6 +22,11 @@ namespace Infrastructure.Repositories
         public async Task<IQueryable<Profile>> GetAllProfiles()
         {
             return _db.Profiles.AsQueryable();
+        }
+
+        public async Task<Profile> GetProfileLeaderByLocation(string location)
+        {
+            return await _db.Profiles.FirstOrDefaultAsync(p => p.Address == location && p.Role == "leader");
         }
 
         public async Task<Profile> CreateProfile(Profile profile)

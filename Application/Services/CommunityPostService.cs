@@ -10,15 +10,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Models.Dtos;
 using Domain.Models.Dtos.Respons;
+using CompanyWeb.Domain.Models.Mail;
 
 namespace Application.Services
 {
     public class CommunityPostService : ICommunityPostService
     {
         private readonly ICommunityPostRepository _communityPostRepository;
-        public CommunityPostService(ICommunityPostRepository communityPostRepository)
+        private readonly IEmailService _emailService;
+        private readonly IProfileRepository _profileRepository;
+        public CommunityPostService(ICommunityPostRepository communityPostRepository, IEmailService emailService, IProfileRepository profileRepository)
         {
             _communityPostRepository = communityPostRepository;
+            _emailService = emailService;
+            _profileRepository = profileRepository;
         }
 
         public async Task<IEnumerable<CommunityPostResponseDTO>> GetAllPosts(
@@ -149,6 +154,31 @@ namespace Application.Services
 
             await _communityPostRepository.AddAsync(communityPost);
             await _communityPostRepository.SaveAsync();
+
+            var leader = await _profileRepository.GetProfileLeaderByLocation(communityPost.Location);
+
+            if (leader != null)
+            {
+                MailData mailData = new MailData();
+                var emailBody = System.IO.File.ReadAllText(@"./EmailReportPost.html");
+                emailBody = string.Format(
+                    emailBody,
+                    communityPost.Title,
+                    communityPost.Description,
+                    communityPost.Urgency,
+                    $"https://www.google.com/maps?q={communityPost.Latitude},{communityPost.Longitude}",
+                    communityPost.Photo
+                );
+
+                List<string> emailTo = new List<string>();
+                List<string> emailCc = new List<string>();
+                emailTo.Add(leader.Email);
+                mailData.EmailToIds = emailTo;
+                mailData.EmailCCIds = emailCc;
+                mailData.EmailSubject = $"Community Post Report : {communityPost.Title}";
+                mailData.EmailBody = emailBody;
+                var emailResponse = _emailService.SendMail(mailData);
+            }
             return new CommunityPostResponseDTO
             {
                 Id = communityPost.PostId,
