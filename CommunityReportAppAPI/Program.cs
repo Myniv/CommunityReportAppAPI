@@ -17,6 +17,7 @@ builder.Services.ConfigurePersistence(builder.Configuration);
 builder.Services.AddScoped<ICommunityPostService, CommunityPostService>();
 builder.Services.AddScoped<IDiscussionService, DiscussionService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<ICommunityPostUpdateService, CommunityPostUpdateService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 var mailSettings = builder.Configuration.GetSection("MailSettings").Get<MailSettings>();

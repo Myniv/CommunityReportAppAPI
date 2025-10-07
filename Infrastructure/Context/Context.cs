@@ -20,5 +20,6 @@ namespace Infrastructure.Context
         public DbSet<Discussion> Discussions { get; set; }
         public DbSet<CommunityPost> CommunityPosts { get; set; }
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<CommunityPostUpdate> CommunityPostUpdates { get; set; }
     }
 }

@@ -58,7 +58,8 @@ namespace Domain.Models
 
         [Column("deleted_at")]
         public DateTime? DeletedAt { get; set; }
-        public ICollection<Discussion> Discussions { get; set; }
-        //public ICollection<Like> Likes { get; set; }
-    }
+        public ICollection<Discussion> Discussions { get; set; } = new List<Discussion>();
+
+        public ICollection<CommunityPostUpdate> CommunityPostUpdates { get; set; } = new List<CommunityPostUpdate>();
+}
 }
