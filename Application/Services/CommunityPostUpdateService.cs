@@ -1,5 +1,7 @@
 ﻿using Application.IRepositories;
 using Application.IServices;
+using CommunityReportAppAPI.Application.IServices;
+using CompanyWeb.Domain.Models.Mail;
 using Domain.Models.Dtos.Request;
 using Domain.Models.Dtos.Respons;
 using Domain.Models.Entities;
@@ -10,17 +12,18 @@ namespace Application.Services
     {
         private readonly ICommunityPostUpdateRepository _communityPostUpdateRepository;
         private readonly ICommunityPostRepository _communityPostRepository;
-        public CommunityPostUpdateService(ICommunityPostUpdateRepository communityPostUpdateRepository, ICommunityPostRepository communityPostRepository)
+        private readonly IEmailService _emailService;
+        private readonly IProfileRepository _profileRepository;
+        public CommunityPostUpdateService(ICommunityPostUpdateRepository communityPostUpdateRepository, ICommunityPostRepository communityPostRepository, IEmailService emailService, IProfileRepository profileRepository)
         {
             _communityPostUpdateRepository = communityPostUpdateRepository;
             _communityPostRepository = communityPostRepository;
+            _emailService = emailService;
+            _profileRepository = profileRepository;
         }
 
         public async Task<CommunityPostUpdateResponseDTO?> CreateCommunityPostUpdate(CommunityPostUpdateRequestDTO communityPostUpdate)
         {
-            //Todo : 
-            // For first create : send email to the users whose region are the same as the user who created the post 
-            // For second create : send email to the user who created the post
             var newCommunityPostUpdate = new CommunityPostUpdate
             {
                 CommunityPostId = communityPostUpdate.PostId,
@@ -34,23 +37,57 @@ namespace Application.Services
                 DeletedAt = null,
             };
 
-            var communityPost = await _communityPostRepository.GetPostById(communityPostUpdate.PostId);
+            var communityPost = await _communityPostRepository.GetFirstOrDefaultAsync(cp =>cp.PostId == newCommunityPostUpdate.CommunityPostId, "User");
 
             if (communityPost == null) return null;
 
+            MailData mailData = new MailData();
+            var emailBody = System.IO.File.ReadAllText(@"./EmailCommunityPostUpdate.html");
+            emailBody = string.Format(
+                emailBody,
+                newCommunityPostUpdate.Title,
+                newCommunityPostUpdate.Description,
+                $"https://www.google.com/maps?q={communityPost.Latitude},{communityPost.Longitude}",
+                newCommunityPostUpdate.Photo
+            );
+
+            List<string> emailTo = new List<string>();
+            List<string> emailCc = new List<string>();
+
             if (communityPost.Status == "pending")
             {
+                var usersRegion = await _profileRepository.GetAllAsync(p => p.Address == communityPost.Location);
+                emailCc = usersRegion.Select(u => u.Email).ToList();
+
+                emailTo.Add(communityPost.User.Email);
+                emailCc.Remove(communityPost.User.Email);
+
                 communityPost.Status = "in_progress";
             }
             else if (newCommunityPostUpdate.IsResolved == true)
             {
                 communityPost.Status = "resolved";
+                emailTo.Add(communityPost.User.Email);
+                emailCc.Add(communityPost.User.Email);
+            }
+            else
+            {
+                emailTo.Add(communityPost.User.Email);
+                emailCc.Add(communityPost.User.Email);
             }
 
+            mailData.EmailToIds = emailTo;
+            mailData.EmailCCIds = emailCc;
+            mailData.EmailSubject = $"Community Post Update Report : {newCommunityPostUpdate.Title}";
+            mailData.EmailBody = emailBody;
+            var emailResponse = _emailService.SendMail(mailData);
+            
             await _communityPostRepository.UpdateAsync(communityPost);
 
             await _communityPostUpdateRepository.AddAsync(newCommunityPostUpdate);
             await _communityPostUpdateRepository.SaveAsync();
+
+
 
             var response = new CommunityPostUpdateResponseDTO
             {
