@@ -7,7 +7,7 @@ namespace Domain.Models.Entities
     {
         [Key]
         [Column("id")]
-        public int CommunityPostProgressId { get; set; }
+        public int CommunityPostUpdateId { get; set; }
 
         [Column("post_id")]
         public int CommunityPostId { get; set; }

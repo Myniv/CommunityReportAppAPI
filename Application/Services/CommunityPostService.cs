@@ -128,7 +128,7 @@ namespace Application.Services
                 }).ToList(),
                 CommunityPostUpdates = cp.CommunityPostUpdates.Select(cu => new CommunityPostUpdateResponseDTO
                 {
-                    Id = cu.CommunityPostProgressId,
+                    CommunityPostUpdateId = cu.CommunityPostUpdateId,
                     UserId = cu.UserId,
                     PostId = cu.CommunityPostId,
                     Title = cu.Title,

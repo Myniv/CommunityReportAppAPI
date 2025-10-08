@@ -91,7 +91,7 @@ namespace Application.Services
 
             var response = new CommunityPostUpdateResponseDTO
             {
-                Id = newCommunityPostUpdate.CommunityPostProgressId,
+                CommunityPostUpdateId = newCommunityPostUpdate.CommunityPostUpdateId,
                 PostId = newCommunityPostUpdate.CommunityPostId,
                 UserId = newCommunityPostUpdate.UserId,
                 Title = newCommunityPostUpdate.Title,
@@ -116,12 +116,12 @@ namespace Application.Services
 
         public async Task<CommunityPostUpdate> GetCommunityPostUpdateById(int id)
         {
-            return await _communityPostUpdateRepository.GetFirstOrDefaultAsync(c => c.CommunityPostProgressId == id);
+            return await _communityPostUpdateRepository.GetFirstOrDefaultAsync(c => c.CommunityPostUpdateId == id);
         }
 
         public async Task<bool> UpdateCommunityPostUpdate(CommunityPostUpdateRequestDTO communityPostUpdate, int id)
         {
-            var existingCommunityPostUpdate = await _communityPostUpdateRepository.GetFirstOrDefaultAsync(c => c.CommunityPostProgressId == id);
+            var existingCommunityPostUpdate = await _communityPostUpdateRepository.GetFirstOrDefaultAsync(c => c.CommunityPostUpdateId == id);
             if (existingCommunityPostUpdate == null)
             {
                 return false;
@@ -139,7 +139,7 @@ namespace Application.Services
 
         public async Task<bool> DeleteCommunityPostUpdate(int id)
         {
-            var existingCommunityPostUpdate = await _communityPostUpdateRepository.GetFirstOrDefaultAsync(c => c.CommunityPostProgressId == id);
+            var existingCommunityPostUpdate = await _communityPostUpdateRepository.GetFirstOrDefaultAsync(c => c.CommunityPostUpdateId == id);
             if (existingCommunityPostUpdate == null)
             {
                 return false;
