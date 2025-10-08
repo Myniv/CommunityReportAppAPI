@@ -87,6 +87,10 @@ namespace Application.Services
             existingProfile.Address = profile.Address;
             existingProfile.Photo = profile.Photo;
             existingProfile.Username = profile.Username;
+            existingProfile.Role = profile.Role;
+            // existingProfile.CreatedAt = profile.CreatedAt?.ToUniversalTime() ?? DateTime.UtcNow;
+            existingProfile.UpdatedAt = profile.UpdatedAt?.ToUniversalTime() ?? DateTime.UtcNow;
+            // existingProfile.DeletedAt = profile.DeletedAt?.ToUniversalTime();
 
             return await _profileRepository.UpdateProfile(existingProfile, id);
         }
