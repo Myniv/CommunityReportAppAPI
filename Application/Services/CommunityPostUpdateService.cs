@@ -54,7 +54,7 @@ namespace Application.Services
             List<string> emailTo = new List<string>();
             List<string> emailCc = new List<string>();
 
-            if (communityPost.Status == "pending")
+            if (communityPost.Status == "Pending")
             {
                 var usersRegion = await _profileRepository.GetAllAsync(p => p.Address == communityPost.Location);
                 emailCc = usersRegion.Select(u => u.Email).ToList();
@@ -62,11 +62,11 @@ namespace Application.Services
                 emailTo.Add(communityPost.User.Email);
                 emailCc.Remove(communityPost.User.Email);
 
-                communityPost.Status = "in_progress";
+                communityPost.Status = "On Progress";
             }
             else if (newCommunityPostUpdate.IsResolved == true)
             {
-                communityPost.Status = "resolved";
+                communityPost.Status = "Resolved";
                 emailTo.Add(communityPost.User.Email);
                 emailCc.Add(communityPost.User.Email);
             }
