@@ -114,9 +114,24 @@ namespace Application.Services
             return await _communityPostUpdateRepository.GetAllAsync();
         }
 
-        public async Task<CommunityPostUpdate> GetCommunityPostUpdateById(int id)
+        public async Task<CommunityPostUpdateResponseDTO?> GetCommunityPostUpdateById(int id)
         {
-            return await _communityPostUpdateRepository.GetFirstOrDefaultAsync(c => c.CommunityPostUpdateId == id);
+            var chosenCommunityPostUpdate =await _communityPostUpdateRepository.GetFirstOrDefaultAsync(c => c.CommunityPostUpdateId == id);
+
+            var communityPostUpdate = new CommunityPostUpdateResponseDTO
+            {
+                CommunityPostUpdateId = id,
+                PostId = chosenCommunityPostUpdate.CommunityPostId,
+                UserId = chosenCommunityPostUpdate.UserId,
+                Title = chosenCommunityPostUpdate.Title,
+                Description = chosenCommunityPostUpdate.Description,
+                Photo = chosenCommunityPostUpdate.Photo,
+                IsResolved = chosenCommunityPostUpdate.IsResolved,
+                CreatedAt = chosenCommunityPostUpdate.CreatedAt,
+                UpdatedAt = chosenCommunityPostUpdate.UpdatedAt,
+            };
+
+            return communityPostUpdate;
         }
 
         public async Task<bool> UpdateCommunityPostUpdate(CommunityPostUpdateRequestDTO communityPostUpdate, int id)

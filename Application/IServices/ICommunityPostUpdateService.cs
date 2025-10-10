@@ -7,7 +7,7 @@ namespace Application.IServices
 {
     public interface ICommunityPostUpdateService
     {
-        Task<CommunityPostUpdate> GetCommunityPostUpdateById(int id);
+        Task<CommunityPostUpdateResponseDTO?> GetCommunityPostUpdateById(int id);
         Task<IEnumerable<CommunityPostUpdate>> GetAllCommunityPostsUpdate(int? postId);
         Task<CommunityPostUpdateResponseDTO?> CreateCommunityPostUpdate(CommunityPostUpdateRequestDTO communityPostUpdate);
         Task<bool> UpdateCommunityPostUpdate(CommunityPostUpdateRequestDTO communityPostUpdate, int id);
