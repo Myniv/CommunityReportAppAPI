@@ -46,6 +46,9 @@ namespace Application.Services
                 Message = discussion.Message,
                 CommunityPostId = discussion.CommunityPostId,
                 UserId = discussion.UserId,
+                CreatedAt= discussion.CreatedAt,
+                UpdatedAt = discussion.UpdatedAt,
+                DeletedAt = discussion.DeletedAt,
                 CommunityPost = new CommunityPostResponseDTO
                 {
                     Username = discussion.CommunityPost!.User!.Username,
