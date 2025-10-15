@@ -14,5 +14,6 @@ namespace Domain.Models.Dtos.Respons
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public ProfileDiscussionResponseDTO? User { get; set; }
+        public CommunityPostResponseDTO? CommunityPost { get; set; }
     }
 }

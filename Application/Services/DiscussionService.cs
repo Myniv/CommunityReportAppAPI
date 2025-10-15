@@ -2,6 +2,8 @@
 using Application.IServices;
 using Domain.Models;
 using Domain.Models.Dtos;
+using Domain.Models.Dtos.Respons;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,19 +20,51 @@ namespace Application.Services
             _discussionRepository = discussionRepository;
         }
 
-        public async Task<IEnumerable<Discussion>> GetAllDiscussions(int? postId)
+        public async Task<IEnumerable<DiscussionResponseDTO>> GetAllDiscussions(int? postId, string? userId)
         {
-            if (postId != null)
-            {
-                return await _discussionRepository.GetAllAsync(d => d.CommunityPostId == postId);
-            }
-            return await _discussionRepository.GetAllAsync();
-            
+            var discussions = await _discussionRepository.GetAllFiltered(postId, userId)
+                .Select(d => new DiscussionResponseDTO{ 
+                    DiscussionId = d.DiscussionId,
+                    Message = d.Message,
+                    CommunityPostId = d.CommunityPostId,
+                    UserId = d.UserId,
+                    CreatedAt = d.CreatedAt,
+                    UpdatedAt = d.UpdatedAt,
+                    DeletedAt = d.DeletedAt
+                }).ToListAsync();
+            return discussions;
         }
 
-        public async Task<Discussion> GetDiscussionById(int id)
+        public async Task<DiscussionResponseDTO?> GetDiscussionById(int id)
         {
-            return await _discussionRepository.GetFirstOrDefaultAsync(d => d.DiscussionId == id);
+            var discussion = await _discussionRepository.GetFirstOrDefaultAsync(d => d.DiscussionId == id, "CommunityPost,User");
+
+            if(discussion == null) return null;
+
+            return new DiscussionResponseDTO{
+                DiscussionId = discussion.DiscussionId,
+                Message = discussion.Message,
+                CommunityPostId = discussion.CommunityPostId,
+                UserId = discussion.UserId,
+                CommunityPost = new CommunityPostResponseDTO
+                {
+                    Username = discussion.CommunityPost!.User!.Username,
+                    UserPhoto = discussion.CommunityPost!.User!.Photo,
+                    UserId = discussion.CommunityPost.UserId,
+                    Photo = discussion.CommunityPost.Photo,
+                    Title = discussion.CommunityPost.Title,
+                    Description = discussion.CommunityPost.Description,
+                    Category = discussion.CommunityPost.Category,
+                    Status = discussion.CommunityPost.Status,
+                    Urgency = discussion.CommunityPost.Urgency,
+                    Latitude = discussion.CommunityPost.Latitude,
+                    Longitude = discussion.CommunityPost.Longitude,
+                    Location = discussion.CommunityPost.Location,
+                    CreatedAt = discussion.CreatedAt,
+                    UpdatedAt = discussion.UpdatedAt,
+                    DeletedAt = discussion.DeletedAt
+                },
+            };
         }
 
         public async Task<Discussion> CreateDiscussion(DiscussionDTO discussion)

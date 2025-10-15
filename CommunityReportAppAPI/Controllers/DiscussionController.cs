@@ -16,10 +16,10 @@ namespace CommunityReportAppAPI.Controllers
 
         }
 
-        [HttpGet("{postId}")]
-        public async Task<IActionResult> Get(int? postId)
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] int? postId, [FromQuery] string? userId)
         {
-            var discussions = await _discussionService.GetAllDiscussions(postId);
+            var discussions = await _discussionService.GetAllDiscussions(postId, userId);
             return Ok(discussions);
         }
 
@@ -27,6 +27,9 @@ namespace CommunityReportAppAPI.Controllers
         public async Task <IActionResult> GetById(int id)
         {
             var discussion = await _discussionService.GetDiscussionById(id);
+            if (discussion == null) {
+                return NotFound();
+            }
             return Ok(discussion);
         }
             
