@@ -92,7 +92,7 @@ namespace Application.Services
 
             var cp = await queryable
                         .Include(p => p.User)
-                        .Include(p=> p.CommunityPostUpdates)
+                        .Include(p => p.CommunityPostUpdates)
                             .ThenInclude(cu => cu.User)
                         .Include(p => p.Discussions)
                             .ThenInclude(d => d.User)
@@ -174,25 +174,28 @@ namespace Application.Services
 
             if (leader != null)
             {
-                MailData mailData = new MailData();
-                var emailBody = System.IO.File.ReadAllText(@"./EmailReportPost.html");
-                emailBody = string.Format(
-                    emailBody,
-                    communityPost.Title,
-                    communityPost.Description,
-                    communityPost.Urgency,
-                    $"https://www.google.com/maps?q={communityPost.Latitude},{communityPost.Longitude}",
-                    communityPost.Photo
-                );
+                if (communityPost.Urgency == "High" || communityPost.Urgency == "Medium")
+                {
+                    MailData mailData = new MailData();
+                    var emailBody = System.IO.File.ReadAllText(@"./EmailReportPost.html");
+                    emailBody = string.Format(
+                        emailBody,
+                        communityPost.Title,
+                        communityPost.Description,
+                        communityPost.Urgency,
+                        $"https://www.google.com/maps?q={communityPost.Latitude},{communityPost.Longitude}",
+                        $"{communityPost.Photo}"
+                    );
 
-                List<string> emailTo = new List<string>();
-                List<string> emailCc = new List<string>();
-                emailTo.Add(leader.Email);
-                mailData.EmailToIds = emailTo;
-                mailData.EmailCCIds = emailCc;
-                mailData.EmailSubject = $"Community Post Report : {communityPost.Title}";
-                mailData.EmailBody = emailBody;
-                var emailResponse = _emailService.SendMail(mailData);
+                    List<string> emailTo = new List<string>();
+                    List<string> emailCc = new List<string>();
+                    emailTo.Add(leader.Email);
+                    mailData.EmailToIds = emailTo;
+                    mailData.EmailCCIds = emailCc;
+                    mailData.EmailSubject = $"Community Post Report : {communityPost.Title}";
+                    mailData.EmailBody = emailBody;
+                    var emailResponse = _emailService.SendMail(mailData);
+                }
             }
             return new CommunityPostResponseDTO
             {
