@@ -225,6 +225,37 @@ namespace Application.Services
                 return false;
             }
 
+            var leader = await _profileRepository.GetProfileLeaderByLocation(post.Location);
+            
+            if (existingPost.Photo == null)
+            {
+                if (leader != null)
+                {
+                    if (existingPost.Urgency == "High" || existingPost.Urgency == "Medium")
+                    {
+                        MailData mailData = new MailData();
+                        var emailBody = System.IO.File.ReadAllText(@"./EmailReportPost.html");
+                        emailBody = string.Format(
+                            emailBody,
+                            existingPost.Title,
+                            existingPost.Description,
+                            existingPost.Urgency,
+                            $"https://www.google.com/maps?q={existingPost.Latitude},{existingPost.Longitude}",
+                            $"{post.Photo}"
+                        );
+
+                        List<string> emailTo = new List<string>();
+                        List<string> emailCc = new List<string>();
+                        emailTo.Add(leader.Email);
+                        mailData.EmailToIds = emailTo;
+                        mailData.EmailCCIds = emailCc;
+                        mailData.EmailSubject = $"Community Post Report : {existingPost.Title}";
+                        mailData.EmailBody = emailBody;
+                        var emailResponse = _emailService.SendMail(mailData);
+                    }
+                }
+            }
+
             existingPost.Title = post.Title;
             existingPost.Description = post.Description;
             existingPost.Photo = post.Photo;
