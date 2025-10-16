@@ -37,7 +37,7 @@ namespace Application.Services
 
         public async Task<DiscussionResponseDTO?> GetDiscussionById(int id)
         {
-            var discussion = await _discussionRepository.GetFirstOrDefaultAsync(d => d.DiscussionId == id, "CommunityPost,User");
+            var discussion = await _discussionRepository.GetFirstOrDefaultAsync(d => d.DiscussionId == id, "CommunityPost,CommunityPost.User");
 
             if(discussion == null) return null;
 
@@ -51,8 +51,8 @@ namespace Application.Services
                 DeletedAt = discussion.DeletedAt,
                 CommunityPost = new CommunityPostResponseDTO
                 {
-                    Username = discussion.CommunityPost!.User!.Username,
-                    UserPhoto = discussion.CommunityPost!.User!.Photo,
+                    Username = discussion.CommunityPost!.User.Username ?? "",
+                    UserPhoto = discussion.CommunityPost!.User.Photo ?? "",
                     UserId = discussion.CommunityPost.UserId,
                     Photo = discussion.CommunityPost.Photo,
                     Title = discussion.CommunityPost.Title,
